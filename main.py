@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException, Response, BackgroundTasks
 from pydantic import BaseModel, HttpUrl
 from typing import Optional, Union, Dict, Any
 from google.cloud import firestore
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -247,7 +247,7 @@ async def get_feed(source_id: str, background_tasks: BackgroundTasks):
         
         # If content is old (more than 1 hour), refresh in background
         generated_at = content.get("generated_at")
-        if not generated_at or (datetime.now() - generated_at).total_seconds() > 3600:
+        if not generated_at or (datetime.now(timezone.utc) - generated_at).total_seconds() > 3600:
             background_tasks.add_task(refresh_feed_task, source)
         
         return Response(content=content["content"], media_type="application/rss+xml")
