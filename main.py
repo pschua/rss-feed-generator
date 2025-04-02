@@ -75,7 +75,7 @@ def scrape_website(feed_source):
             
             # Try to find date
             all_text = article.get_text(" ", strip=True) # get all text content
-            matches = list(datefinder.find_dates(str(all_text)))
+            matches = list(datefinder.find_dates(str(all_text), strict=True))
             if matches:
                 pub_date = matches[0]
                 time_aware_pub_date = pub_date.replace(tzinfo=pytz.UTC)
