@@ -36,3 +36,4 @@ ENV/
 *_test.py
 sources.txt
 *.xml
+service-account.json

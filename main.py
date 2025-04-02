@@ -9,10 +9,22 @@ from typing import Optional, Union, Dict, Any
 from google.cloud import firestore
 from datetime import datetime
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="RSS Feed Generator", 
               description="Create an RSS feed from a website",)
 db = firestore.Client()
+
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 
 # region Pydantic models
