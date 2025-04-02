@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import timezone, datetime
 from feedgen.feed import FeedGenerator
+from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Response, BackgroundTasks
 from pydantic import BaseModel, HttpUrl
@@ -65,8 +66,8 @@ def scrape_website(feed_source):
 
             # Fix relative links
             if link and not link.startswith(("http")):
-                base_url = str(feed_source["url"])
-                link = f"{base_url}{'' if link.startswith('/') else '/'}{link}"
+                domain = urlparse(str(feed_source["url"])).netloc
+                link = f"https://{domain}{'' if link.startswith('/') else '/'}{link}"
 
             description = desc_elem.text.strip() if desc_elem else ""
 
