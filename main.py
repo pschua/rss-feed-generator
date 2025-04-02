@@ -98,7 +98,7 @@ def generate_rss(feed_source, items):
     for item in items:
         entry = fg.add_entry()
         entry.title(item.get('title', 'No Title'))
-        entry.link = item.get('link')
+        entry.link(href= item.get('link'))
         entry.description(item.get('text', 'No Description'))
 
     # Generate the feed
