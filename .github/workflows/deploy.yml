@@ -25,7 +25,7 @@ jobs:
     # Build and push the container
     - name: 'Build and Push Container'
       run: |
-        gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/rss-generator
+        gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/rss-generator --suppress-logs
     
     # Deploy to Cloud Run
     - name: 'Deploy to Cloud Run'
