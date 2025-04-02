@@ -4,3 +4,4 @@ google-cloud-firestore>=2.11.1
 requests>=2.31.0
 beautifulsoup4>=4.12.2
 feedgen>=0.9.0
+datefinder>=0.7.3

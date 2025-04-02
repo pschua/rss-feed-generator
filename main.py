@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import timezone, datetime
 from feedgen.feed import FeedGenerator
 from urllib.parse import urlparse
+import datefinder
+import pytz
 
 from fastapi import FastAPI, HTTPException, Response, BackgroundTasks
 from pydantic import BaseModel, HttpUrl
@@ -70,11 +72,22 @@ def scrape_website(feed_source):
                 link = f"https://{domain}{'' if link.startswith('/') else '/'}{link}"
 
             description = desc_elem.text.strip() if desc_elem else ""
+            
+            # Try to find date
+            all_text = article.get_text(" ", strip=True) # get all text content
+            matches = list(datefinder.find_dates(str(all_text)))
+            if matches:
+                pub_date = matches[0]
+                time_aware_pub_date = pub_date.replace(tzinfo=pytz.UTC)
+            else:
+                print("No date found.")
+                pub_date = None
 
             items.append({
                 'title': title,
                 'link': link,
                 'description': description,
+                'pub_date': time_aware_pub_date,
             })
 
         return items
@@ -100,7 +113,8 @@ def generate_rss(feed_source, items):
         entry = fg.add_entry()
         entry.title(item.get('title', 'No Title'))
         entry.link(href= item.get('link'))
-        entry.description(item.get('text', 'No Description'))
+        entry.description(item.get('description', 'No Description'))
+        entry.pubDate(item.get('pub_date', datetime.now(timezone.utc)))
 
     # Generate the feed
     return fg.rss_str(pretty=True)
