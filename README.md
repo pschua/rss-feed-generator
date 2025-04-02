@@ -67,15 +67,14 @@ Once running, access the auto-generated API documentation at:
 
 ### Creating a New Feed Source
 To create a new feed source, send a POST request to /sources/ with a JSON body:
-
-    ```json
-    {
-        "name": "Example Blog",
-        "url": "https://example.com/blog",
-        "selector": "article.post",
-        "description": "Example blog feed"
-    }
-    ```
+```json
+{
+    "name": "Example Blog",
+    "url": "https://example.com/blog",
+    "selector": "article.post",
+    "description": "Example blog feed"
+}
+```
 
 The selector is a CSS selector that identifies each article or content item on the page. The API will look for title elements (h1, h2, h3, .title), links (a), and description elements (p, .summary, .description) within each matched element.
 
