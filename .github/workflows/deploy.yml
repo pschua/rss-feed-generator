@@ -33,7 +33,7 @@ jobs:
         gcloud run deploy rss-generator \
           --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/rss-generator \
           --platform managed \
-          --region asia-east1 \
+          --region ${{ secrets.GCP_REGION }} \
           --allow-unauthenticated \
           --project ${{ secrets.GCP_PROJECT_ID }}
     
@@ -41,7 +41,7 @@ jobs:
     - name: 'Set up Cloud Scheduler'
       run: |
         # Get the service URL
-        SERVICE_URL=$(gcloud run services describe rss-generator --platform managed --region asia-east1 --format 'value(status.url)')
+        SERVICE_URL=$(gcloud run services describe rss-generator --platform managed --region ${{ secrets.GCP_REGION }} --format 'value(status.url)')
         
         # Create or update the scheduler job
         gcloud scheduler jobs create http refresh-rss-feeds \
@@ -49,12 +49,12 @@ jobs:
           --uri="${SERVICE_URL}/refresh-all" \
           --http-method=POST \
           --attempt-deadline=540s \
-          --location=asia-east1 \
+          --location=${{ secrets.GCP_REGION }} \
           --project=${{ secrets.GCP_PROJECT_ID }} || \
         gcloud scheduler jobs update http refresh-rss-feeds \
           --schedule="0 */12 * * *" \
           --uri="${SERVICE_URL}/refresh-all" \
           --http-method=POST \
           --attempt-deadline=540s \
-          --location=asia-east1 \
+          --location=${{ secrets.GCP_REGION }} \
           --project=${{ secrets.GCP_PROJECT_ID }}
