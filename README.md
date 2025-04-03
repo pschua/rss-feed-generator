@@ -60,7 +60,8 @@ Your service account will need the following roles:
 
 - `roles/datastore.user` - For Firestore access
 
-(include the ones below if using GitHub Actions)
+> [!NOTE]
+> include the ones below if using GitHub Actions
 - `roles/run.admin` - For Cloud Run deployment
 - `roles/cloudbuild.builds.editor` - For Cloud Build operations
 - `roles/cloudscheduler.admin` - For Cloud Scheduler configuration
@@ -123,14 +124,14 @@ For example, if articles are structured like this:
 ```
 The appropriate selector would be `article.post`.
 
-[!IMPORTANT] 
-Be mindful of the websites you scrape - ensure you're complying with their terms of service and robots.txt policies.
+>[!IMPORTANT]
+>Be mindful of the websites you scrape - ensure you're complying with their terms of service and robots.txt policies.
 
 #### Selector Example
 The image below shows the selector you should use for the Elementor blog page:
 ![Elementor Blog sample](img/elementor_example.png)
-[!NOTE]
-This example is for illustration purposes
+> [!NOTE]
+> This example is for illustration purposes only
 
 It's recommended to test your selector using the browser console before adding it to your feed configuration:
 ```javascript
