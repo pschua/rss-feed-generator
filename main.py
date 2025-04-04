@@ -56,10 +56,8 @@ def scrape_website(feed_source):
 
         items = []
         for i, article in enumerate(articles):
-            title_elem = article.select_one("h1, h2, h3, .title")
+            title_elem = article.select_one("h1, h2, h3, h4, h5, h6 .title")
             link_elem = article.select_one('a') if article.select_one('a') else article
-            desc_elem = article.select_one("p, .summary, .description")
-            longest_desc_elem = max(desc_elem, key=lambda x: len(x.text)) if desc_elem else None # Find the longest object
 
             if not title_elem or not link_elem:
                 continue
@@ -71,8 +69,15 @@ def scrape_website(feed_source):
             if link and not link.startswith(("http")):
                 domain = urlparse(str(feed_source["url"])).netloc
                 link = f"https://{domain}{'' if link.startswith('/') else '/'}{link}"
-
-            description = longest_desc_elem.text.strip() if longest_desc_elem else ""
+            
+            # Extract description
+            desc_elem = article.select("p, .summary, .description")
+            if desc_elem:
+                # Find the longest description element
+                longest_desc_elem = max(desc_elem, key=lambda x: len(x.text)) if desc_elem else None
+                description = longest_desc_elem.text.strip() if longest_desc_elem else ""
+            else:
+                description = article.get_text(" ", strip=True).replace(title, "").strip() 
             
             # Try to find date
             all_text = article.get_text(" ", strip=True) # get all text content
